@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■サードパーティーのリポジトリ概要</p>
+<div>
+CentOS 標準リポジトリは安定していますが、パッケージのバージョンがやや古いです。<br/>
+標準リポジトリに存在しないパッケージも扱いたいので、サードパーティのリポジトリを利用できるようにします。<br/>
+</div>
+
+<p>■各種パス</p>
+<pre>
+・リポジトリ設定ファイル置き場
+/etc/yum.repos.d/
+</pre>
+
+
+<p>■EPEL概要</p>
+<div>
+エンタープライズ Linux 用の拡張パッケージ(EPEL) は、 Red Hat Enterprise Linux (RHEL) 向けの高品質なアドオンパッケージであり、<br/>
+CentOS や Scientific Linux (SL) のような RHEL からスピンオフしたディストリビューションと互換性のある、Fedora プロジェクトで有志によって作成されたパッケージになります。<br/>
+Fedora は RHEL のアップストリームであり、EPEL のアドオンパッケージは主に RHEL 向けにビルドされた Fedora リポジトリをソースとしています。 <br/>
+</div>
+
+<pre>
+・リポジトリ追加 epel-release-6-8.noarch.rpm 2012.11.05
+# rpm -ivh http://dl.fedoraproject.org/pub/epel/6/x86_64/epel-release-6-8.noarch.rpm
+</pre>
+
+<div>
+参考：EPEL/ja<br/>
+<a href="https://fedoraproject.org/wiki/EPEL/ja">https://fedoraproject.org/wiki/EPEL/ja</a><br/>
+<a href="http://dl.fedoraproject.org/pub/epel/6/x86_64/">リリース一覧</a><br/><br/>
+</div>
+
+<p>■RPMforge概要</p>
+<div>
+</div>
+
+<pre>
+・リポジトリ追加 rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm 2016.6.12
+# rpm -ivh http://pkgs.repoforge.org/rpmforge-release/rpmforge-release-0.5.3-1.el7.rf.x86_64.rpm
+</pre>
+
+<div>
+参考：<br/>
+<a href=""></a><br/>
+<a href="http://pkgs.repoforge.org/rpmforge-release/">リリース一覧</a><br/><br/>
+</div>
+
+<p>■remi概要</p>
+<div>
+</div>
+
+<pre>
+・リポジトリ追加 remi-release-7.rpm 2016.6.30
+# rpm -ivh http://rpms.famillecollet.com/enterprise/remi-release-7.rpm
+</pre>
+
+<div>
+参考：Remi's RPM repository<br/>
+<a href="http://rpms.famillecollet.com/">http://rpms.famillecollet.com/</a><br/>
+<a href="http://rpms.famillecollet.com/enterprise/">リリース一覧</a><br/><br/>
+</div>
+
+<p>■リポジトリの優先順位を変更</p>
+<pre># yum install yum-plugin-priorities</pre>
+
+
+<p>■参考URL</p>
+<div>
+参考：お名前.com VPS で EPEL、RPMforge、remi リポジトリを利用する<br/>
+<a href="http://www.karakaram.com/onamae-com-vps4-yum">http://www.karakaram.com/onamae-com-vps4-yum</a><br/>
+</div>

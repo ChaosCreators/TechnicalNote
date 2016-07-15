@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■サインアップ</p>
+登録時に使用した情報を元にリクエストを送る
+<pre>
+$ curl -X POST \
+-H "X-Parse-Application-Id: $PARSE_APP_ID" \
+-H "X-Parse-REST-API-Key: $PARSE_REST_API_KEY" \
+-H 'Content-Type: application/json' \
+-d '{"username":"Ｍａｏ", "password":"hoge"}' \
+https://localhost/classes/users
+</pre>

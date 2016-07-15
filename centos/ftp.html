@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■FTP概要</p>
+<div>
+</div>
+
+<p>■各種パス</p>
+<pre>
+・confファイル
+/etc/vsftpd/vsftpd.conf
+・実行ファイル
+/etc/rc.d/init.d/vsftpd</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・インストール
+# sudo yum -y install vsftpd
+・起動
+# /etc/rc.d/init.d/vsftpd [start | stop | restart | status]
+# service vsftpd [start | stop | restart | status]
+・自動起動
+# cnkconfig vsftpd on
+・起動確認
+# chkconfig vsftpd --list
+</pre>
+
+<p>■設定ファイル</p>
+<pre>
+#匿名アクセス禁止
+anonymous_enable=YES
+　　↓
+anonymous_enable=NO
+
+#ファイルのパーミッションが644になってしまうので、グループ書き込み可の664にします
+local_umask=022
+　　↓
+local_umask=002
+
+#アスキーモード有効
+#ascii_upload_enable=YES
+#ascii_download_enable=YES
+　　↓
+ascii_upload_enable=YES
+ascii_download_enable=YES
+
+#シグニチャ隠蔽
+#ftpd_banner=Welcome to blah FTP service.
+　　↓
+ftpd_banner=Welcome to blah FTP service.
+
+#ホームディレクトリのみ参照するユーザー設定
+#chroot_list_enable=YES
+#chroot_list_file=/etc/vsftpd/chroot_list
+　　↓
+chroot_list_enable=YES
+chroot_list_file=/etc/vsftpd/chroot_list
+
+#サブフォルダを含む一括アップロード・ダウンロードを許可
+#ls_recurse_enable=YES
+　　↓
+ls_recurse_enable=YES
+
+#－－－－－ファイルの最後に設定を追加－－－－－
+#/etc/vsftpd/user_listのユーザーだけを許可
+userlist_deny=NO
+
+#タイムスタンプ時間をローカル時間にする
+use_localtime=YES
+
+#設定を簡単にするためにPASVのポート範囲を限定
+pasv_min_port=50000
+pasv_max_port=50030
+
+#ユーザーの初期アクセスディレクトリ
+#ここに書いたディレクトリが最初に開く。
+#local_rootを書かないとホームディレクトリ
+local_root=/var/www/html
+
+#ユーザのホームディレクトリより、上位のディレクトリへの移動を不許可に
+chroot_local_user=YES
+
+#隠しファイルを表示させる場合
+force_dot_files=YES
+
+</pre>
+
+<p>■ユーザー作成</p>
+<a href="./user.html">user</a>
+<pre>
+# useradd ftpd
+# passwd ftpd
+</pre>
+
+<p>■iptableの設定変更</p>
+<a href="./iptables.html">iptables</a>
+<pre>
+$ sudo /etc/sysconfig/iptables
+# vi /etc/sysconfig/iptables
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 20    -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 21    -j ACCEPT
+-A RH-Firewall-1-INPUT -m state --state NEW -m tcp -p tcp --dport 50000:50030  -j ACCEP
+</pre>
+
+<p>■トラブルシューティング</p>
+
+<p>■参考URL</p>
+<div>
+参考：さくらVPSでFTPを使える様にした<br/>
+<a href="http://qiita.com/satomyumi/items/11382273624621f3caee">http://qiita.com/satomyumi/items/11382273624621f3caee</a><br/>
+参考：さくらVPSにFTPサーバー(vsftpd)を1時間で導入<br/>
+<a href="http://plusblog.jp/6601/">http://plusblog.jp/6601/</a><br/>
+</div>
+
+
+
+
+
+</section>
+</body>
+</html>

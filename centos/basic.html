@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■サービス関連</p>
+・サービス起動
+<pre>
+$ sudo service [process] [start | stop | restart | status]
+# service [process] [start | stop | restart | status]
+$ sudo /etc/rc.d/init.d/[process] [start | stop | restart | status]
+# /etc/rc.d/init.d/[process] [start | stop | restart | status]
+</pre>
+
+・サービス起動確認
+<pre>
+$ chkconfig --list
+$ chkconfig [service] --list
+</pre>
+
+・サービスの自動起動
+<pre>
+$ sudo chkconfig [service] on
+# chkconfig [service] on
+</pre>
+
+・ランレベルを設定する場合
+<pre>
+$ sudo chkconfig --level 35 [service] on
+# chkconfig --level 35 [service] on
+</pre>
+
+・chkconfigまとめ
+<a href="http://qiita.com/shell/items/30031862d91cedf9ceef">http://qiita.com/shell/items/30031862d91cedf9ceef</a>
+
+<p>■その他</p>
+・コマンドのパスを表示
+<pre>$ which cat</pre>
+<p>■iptables</p>
+<pre>/etc/sysconfig/iptables</pre>
+<a href="./iptables.html">iptable</a>
+
+<p>■apache</p>
+<pre>/etc/httpd/conf/httpd.conf</pre>
+<a href="./apache.html">apache</a>
+
+<p>■postgresql</p>
+・postgresql-9.1等バージョンが付いている場合があるので注意
+<pre>
+$ sudo service postgresql-9.1 [start | stop | restart | status]
+# service postgresql-9.1 [start | stop | restart | status]
+$ sudo /etc/rc.d/init.d/postgresql-9.1 [start | stop | restart | status]
+# /etc/rc.d/init.d/postgresql-9.1 [start | stop | restart | status]
+</pre>
+
+
+
+</section>
+</body>
+</html>

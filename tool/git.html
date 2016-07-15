@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■git概要</p>
+
+<p>■基本コマンド</p>
+<pre>
+$ echo "# TechnicalNote" >> README.md
+$ git init
+$ git config --local user.name ChaosCreators
+$ git config --local user.email developer@chaos-creators.com
+$ git add README.md
+$ git commit -m "first commit"
+$ git remote add origin https://github.com/[account name]/[repository].git
+$ git push -u origin master
+</pre>
+
+<p>■add</p>
+<pre>
+・全てのファイルを追加する
+$ git add .
+・ワイルドカードを使用
+$ git add *.txt
+</pre>
+
+<p>■Commit Author と Commiter を変更する<p>
+<div>
+何時もと違うPCを使用したときに.gitconfigの設定が違う場合に、
+意図しないメールアドレスをユーザー名が入る場合がある
+</div>
+・ログの確認
+<pre>
+$ git log -1 --pretty=full
+</pre>
+
+・Commiter変更方法
+<pre>
+・リポジトリ直下の.gitconfigの設定を追加
+$ git config --local user.name ChaosCreators
+$ git config --local user.email developer@chaos-creators.com
+
+・更新したい情報を .gitconfig に設定した後に、--amend で情報を変更
+$ git commit --amend
+</pre>
+
+・Author変更方法
+<pre>
+$ git commit --amend --author="ChaosCreators <developer@chaos-creators.com>"
+$ git rebase --continue
+
+・変更されたか確認
+$ git log --pretty=full
+
+・すでにコミットしてしまっているなら、-f が必要
+$ git push origin master
+$ git push -f origin master
+</pre>
+
+・過去のコミットをすべて変更
+<pre>
+$ git filter-branch -f --env-filter "GIT_AUTHOR_NAME='sea_mountain'; GIT_AUTHOR_EMAIL='valid_email@example.com'; GIT_COMMITTER_NAME='sea_mountain'; GIT_COMMITTER_EMAIL='valid_email@example.com';" HEAD
+</pre>
+
+<div>
+参考：Git の Commit Author と Commiter を変更する<br/>
+<a href="http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932">http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932</a>
+</div>

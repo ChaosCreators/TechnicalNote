@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■Cygwin概要</p>
+<div>
+</div>
+
+<p>■各種パス</p>
+コマンドラインから使用できるようにするにはパスを通す必要がある
+<pre>
+・標準コマンド
+C:\cygwin64\bin
+・自分でコンパイルした実行コマンド
+C:\cygwin64\usr\local\bin
+</pre>
+
+<p>■Tips</p>
+<pre>
+オペレーティングシステム(OS)によって考え方は異なっているが、一般に/usr/local以下には、自分でコンパイルしたものを置いておくために使われる。
+/usr/binや/binはシステムの標準のコマンドが置かれるが、/usr/local/binにはそれ以外のものを置く。
+</pre>
+
+<p>■ダウンロード</p>
+<a target="_blank" href="https://cygwin.com/install.html">https://cygwin.com/install.html</a>
+
+<pre>
+適当なフォルダにsetup-x86_64.exeを置いて実行
+「Cygwin Setup - Choose Installation Type」では、規定（デフォルト）の「Install from Internet」のままで、「次へ(N) >」をクリック
+「Cygwin Setup - Choose Installation Directory」では、規定（デフォルト）のままで、「次へ(N) >」をクリック
+(Root Directoryは C:\cygwin64 )
+「Cygwin Setup - Select Local Package Directory」では， 「C:\cygwin64\package」と入力して、 「次へ(N) >」をクリック
+エラー「Directory C:\cygwin64\package does not exist, would you like me to create it?」 と出るので、「はい」をクリック
+「Cygwin Setup - Select Connection Type」では、 「Use Internet Explorer Proxy Settings」 を選択して、「次へ」をクリック
+「Cygwin Setup Choose A Download Site」では，ftp://ftp.yz.yamagata-u.ac.jp を選択して、「次へ」をクリック
+</pre>
+
+<p>■パッケージのダウンロード</p>
+・wget
+
+
+<p>■apt-cyg</p>
+<pre>
+apt-cygはパッケージ管理用のツールです。
+アプリケーションが簡単にインストールできるようになります。
+</pre>
+・ダウンロード
+<pre>
+$ wget https://raw.githubusercontent.com/transcode-open/apt-cyg/master/apt-cyg
+</pre>
+ダウンロードが完了したら実行権限をつけてPATHの通っている場所へ移動
+<pre>
+$ ls -al
+$ chmod 755 apt-cyg
+$ mv apt-cyg /usr/local/bin/
+</pre>
+
+<div>
+参考：Cygwinのインストールとapt-cygのインストール<br/>
+<a target="_blank" href="http://qiita.com/FSMS/items/68b5956301d987d1be2b">http://qiita.com/FSMS/items/68b5956301d987d1be2b</a><br/>
+<div>
+

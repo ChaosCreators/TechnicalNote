@@ -1,0 +1,21 @@
+@charset "UTF-8";
+html {
+	font-size:12px;
+	font-family: helvetica, arial, 'hiragino kaku gothic pro', meiryo, 'ms pgothic', sans-serif;
+}
+a {
+	color:;
+}
+pre {
+	margin-left:10px;
+}
+div {
+	margin-bottom: 10px;
+	margin-left:10px;
+}
+pre {
+	padding:10px;
+	background:#4B053E;
+	color:#E4E5E5;
+	line-height:20px;
+}

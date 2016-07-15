@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■node.js概要</p>
+<div>
+</div>
+
+<p>■各種パス</p>
+
+
+
+<p>■yumアップデート</p>
+<pre>
+# yum update
+</pre>
+
+<p>■nodejs用ユーザー作成</p>
+<pre>
+# useradd node
+# passwd node
+# usermod -G wheel node
+sudoコマンドを使用できるのはwheelグループのみなのでsudoを使用できる用に追加する
+
+# visudo
+※wheelグループのコメントアウトを解除する
+
+</pre>
+
+<p>■nodejsインストール</p>
+<pre>
+$ sudo node
+$ sudo yum install epel-release
+$ sudo yum install nodejs
+$ node -v
+$ sudo yum install -y npm --enablerepo=epel
+</pre>
+
+
+<p>■参考URL</p>
+参考：centos + node.js + npm + nvm インストール<br/>
+<a target="_blank" href="http://qiita.com/akippiko/items/3708016fc43da088021c0">http://qiita.com/akippiko/items/3708016fc43da088021c</a>

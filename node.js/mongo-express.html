@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■Mongo Express概要</p>
+<div>
+Mongo Express は MongoDB を GUI で操作できる管理ツールです。<br/>
+Node.js および express で作られています。コレクションの表示やドキュメントの追加・更新・削除等基本的な操作を<br/>
+WebベースのUIを通じて行うことができます。
+</div>
+
+<p>■各種パス</p>
+<pre>
+・設定ファイル
+/[install folder]/config.js
+/home/node/mongo-express/config.js
+</pre>
+
+<p>■インストール</p>
+nodeユーザーフォルダーに作成する場合
+<pre>
+$ sudo node
+$ cd /home/node/
+$ git clone https://github.com/andzdroid/mongo-express.git
+$ cd mongo-express
+$ npm install
+
+・設定ファイルを編集する
+$ cp config.default.js config.js
+
+・起動する
+$ fnode app.js
+・常駐
+$ forever app.js
+</pre>
+
+<p>■設定ファイル</p>
+<pre>
+  site: {
+    // baseUrl: the URL that mongo express will be located at - Remember to add the forward slash at the stard and end!
+    baseUrl: process.env.ME_CONFIG_SITE_BASEURL || '/',
+    cookieKeyName: 'mongo-express',
+    cookieSecret:     process.env.ME_CONFIG_SITE_COOKIESECRET   || 'cookiesecret',
+    host:             process.env.VCAP_APP_HOST                 || '[domain || ip address]',
+    port:             process.env.VCAP_APP_PORT                 || [port. default : 8081],
+    requestSizeLimit: process.env.ME_CONFIG_REQUEST_SIZE        || '50mb',
+    sessionSecret:    process.env.ME_CONFIG_SITE_SESSIONSECRET  || 'sessionsecret',
+    sslCert:          process.env.ME_CONFIG_SITE_SSL_CRT_PATH   || '',
+    sslEnabled:       process.env.ME_CONFIG_SITE_SSL_ENABLED    || false,
+    sslKey:           process.env.ME_CONFIG_SITE_SSL_KEY_PATH   || '',
+  },
+</pre>
+<pre>
+  basicAuth: {
+    username: process.env.ME_CONFIG_BASICAUTH_USERNAME || '[console login name]',
+    password: process.env.ME_CONFIG_BASICAUTH_PASSWORD || '[console login pass]',
+  },
+</pre>
+
+<p>■トラブルシューティング</p>
+・作成したコレクションが表示されない。<br/>
+mongo上にはあるのにUIに出てこない場合は、「+CreateCollection」から追加を行なえば出てくる。
+<br/>
+
+
+<p>■参考URL</p>
+<div>
+参考：MongoDB の GUI ツール Mongo Express で MongoDB を管理<br/>
+<a href="http://yutawatanabe.hatenablog.com/entry/mongodb-mongo-express">http://yutawatanabe.hatenablog.com/entry/mongodb-mongo-express</a><br/>
+</div>
+
+</section>
+</body>
+</html>
+

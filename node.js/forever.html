@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■forever概要</p>
+<div>
+foreverは、既存のスクリプトをデーモン化するツールです。<br/>
+この仕組みを使うと、スクリプトを自動起動したり、何らかのエラーで途中終了してしまった場合の再起動といった処理を自動で行なってくれます。
+</div>
+
+<p>■基本コマンド</p>
+
+<pre>
+・インストール
+# npm install forever -g
+$ sudo npm install forever -g
+オプションの「-g」はグローバルインストールの意で，npmのインストール場所にパッケージをインストールします。
+付けない場合は，カレントディレクトリのnode_modules内にインストールされます。
+・起動
+# forever start app.js
+# forever -w start app.js
+-wはファイルの変更を監視して自動的に再起動
+・実行中のスクリプト一覧
+# forever list
+・実行中スクリプトの停止や再起動
+# forever stop
+# forever stopall
+# forever restart
+</pre>
+
+<div>
+参考：node.js node.jsスクリプトをforeverでデーモン化する<br/>
+http://onlineconsultant.jp/pukiwiki/?node.js%20node.js%E3%82%B9%E3%82%AF%E3%83%AA%E3%83%97%E3%83%88%E3%82%92forever%E3%81%A7%E3%83%87%E3%83%BC%E3%83%A2%E3%83%B3%E5%8C%96%E3%81%99%E3%82%8B
+<div>

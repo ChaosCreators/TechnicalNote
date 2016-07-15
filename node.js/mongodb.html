@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■mogoDB概要</p>
+<div>
+</div>
+
+<p>■各種パス</p>
+<pre>
+・confファイル
+/etc/mongod.conf
+・実行ファイル
+/etc/rc.d/init.d/vsftpd
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・インストール
+# yum insatll mongodb-org
+・起動
+# service mongod start
+・自動起動
+# chkconfig mongod on
+・起動確認
+# chkconfig mongod --list
+</pre>
+
+<p>■データベース操作</p>
+<pre>
+・ログイン
+$mongo
+
+・DB作成
+$ mongo [dbname]
+> use [dbname]
+useコマンドで自動生成
+
+・DB一覧[MySQL : SHOW DATABASE]
+> show dbs
+
+・DB削除 [MySQL : DROP DATABASE]
+> use [dbname]
+>db.dropDatabase()
+</pre>
+
+<p>■コレクション操作</p>
+<pre>
+・テーブル一覧 [MySQL : ALTER TABLE]
+> show collections
+
+・テーブル作成 [MySQL : CREATE TABLE]
+> db.createCollection("[table]")
+
+・テーブル削除 [MySQL : DROP TABLE]
+> db.[table].drop()
+</pre>
+
+<p>■ドキュメント操作</p>
+<pre>
+・SELECT [MySQL : SELECT * FROM]
+> db.[table].find()
+</pre>
+
+<div>
+参考：MongoDBのデータ構造な簡単な操作など
+<a target="_blank" href="http://qiita.com/yuji0602/items/c55e2cb75376fd565b4e">http://qiita.com/yuji0602/items/c55e2cb75376fd565b4e</a>

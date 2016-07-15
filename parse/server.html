@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■parse-server index.js example.</p>
+<pre>
+var express = require('express');
+var ParseServer = require('parse-server').ParseServer;
+
+var app = express();
+
+var api = new ParseServer({
+        databaseURI: 'mongodb://localhost/parse-server',
+        appId: 'myAppId',
+        //cloud:'',
+        masterKey: 'mySecretMasterKey',
+        serverURL: 'http://localhost:1337/parse/',
+        // option
+        restAPIKey: 'myRestApiKey'
+});
+
+app.use('/parse', api);
+
+app.get('/', function(req, res) {
+        res.status(200).send('Express is running here.');
+});
+
+var port = process.env.POST || 1337;
+app.listen(port, function() {
+        console.log('parser-server-example runnninng on port' + port + '.');
+});
+</pre>
+
+<div>
+参考：Parse Server Guide<br/>
+<a target="_blank" href="https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide">https://github.com/ParsePlatform/parse-server/wiki/Parse-Server-Guide</a>
+</div>
+
