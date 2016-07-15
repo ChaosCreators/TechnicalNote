@@ -24,13 +24,38 @@ $ git remote add origin https://github.com/[account name]/[repository].git
 $ git push -u origin master
 </pre>
 
-<p>■add</p>
 <pre>
-・全てのファイルを追加する
-$ git add .
+・作業ツリーの状態を確認
+$ git status
+・差分を見る
+$ git diff
+
+・git indexにファイル追加
+$ git add [file]
 ・ワイルドカードを使用
 $ git add *.txt
+・全て追加
+$ git add .
+
+・git indexに追加されているファイルをローカルリポジトリに反映
+$ git commit -m "[comment]"
+-mオプション付けないとコミットエディタが起動する
+$ git commit"
+
+・ローカルリポジトリの内容をリモートリポジトリに反映する
+$ git push -u origin master
+remoteの向き先設定されていれば指定しなくてOK
+$ git push
+
+・リモートリポジトリの変更をとってくる
+$ git pull
+
 </pre>
+
+<div>
+参考：Git備忘録（自分用）<br/>
+<a target="_blank" href="http://qiita.com/muramount/items/345d137f024cfd919fa3">http://qiita.com/muramount/items/345d137f024cfd919fa3</a>
+</div>
 
 <p>■Commit Author と Commiter を変更する<p>
 <div>
@@ -72,5 +97,5 @@ $ git filter-branch -f --env-filter "GIT_AUTHOR_NAME='sea_mountain'; GIT_AUTHOR_
 
 <div>
 参考：Git の Commit Author と Commiter を変更する<br/>
-<a href="http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932">http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932</a>
+<a target="_blank" href="http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932">http://qiita.com/sea_mountain/items/d70216a5bc16a88ed932</a>
 </div>
