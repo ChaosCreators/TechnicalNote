@@ -24,8 +24,9 @@ $ git remote add origin https://github.com/[account name]/[repository].git
 $ git push -u origin master
 </pre>
 
-<pre>
+
 ・作業ツリーの状態を確認
+<pre>
 $ git status
 # On branch master
 # Changed but not updated:
@@ -35,37 +36,42 @@ $ git status
 #       modified:   HBPreferencesTransFormer.m
 #
 no changes added to commit (use "git add" and/or "git commit -a")
+</pre>
 
 ・差分を見る
+<pre>
 $ git diff
 $ git diff [差分を確認したいファイル]
+</pre>
 
-・git indexにファイル追加
-$ git add [file]
+・git indexにファイル追加<br/>
 変更点を保存するには、git addコマンドで対象とするファイルを指定したのちに「git commit」コマンドを実行する。
-
+<pre>
+$ git add [file]
 ・ワイルドカードを使用
 $ git add *.txt
 ・全て追加
 $ git add .
+</pre>
 
-・git indexに追加されているファイルをローカルリポジトリに反映
-$ git commit -m "[comment]"
-
-・git commitを「-a」オプションを付けて実行すると変更が加えられたファイルを自動検出してコミットできる。ただし、この場合新規に作成されたファイルはコミット対象にはならない。 
-$ git commit -a
-
+・git indexに追加されているファイルをローカルリポジトリに反映<br/>
+-aオプションを付けて実行すると変更が加えられたファイルを自動検出してコミットできる。ただし、この場合新規に作成されたファイルはコミット対象にはならない。<br/>
 -mオプション付けないとコミットエディタが起動する
+<pre>
 $ git commit"
+$ git commit -m "[comment]"
+$ git commit -a
+$ git commit -a -m "[comment"
+</pre>
 
 ・ローカルリポジトリの内容をリモートリポジトリに反映する
+<pre>
 $ git push -u origin master
 remoteの向き先設定されていれば指定しなくてOK
 $ git push
 
 ・リモートリポジトリの変更をとってくる
 $ git pull
-
 </pre>
 
 <div>
