@@ -27,11 +27,23 @@ $ git push -u origin master
 <pre>
 ・作業ツリーの状態を確認
 $ git status
+# On branch master
+# Changed but not updated:
+#   (use "git add <file>..." to update what will be committed)
+#
+#       modified:   HBPreferencesTransFormer.h
+#       modified:   HBPreferencesTransFormer.m
+#
+no changes added to commit (use "git add" and/or "git commit -a")
+
 ・差分を見る
 $ git diff
+$ git diff [差分を確認したいファイル]
 
 ・git indexにファイル追加
 $ git add [file]
+変更点を保存するには、git addコマンドで対象とするファイルを指定したのちに「git commit」コマンドを実行する。
+
 ・ワイルドカードを使用
 $ git add *.txt
 ・全て追加
@@ -39,6 +51,10 @@ $ git add .
 
 ・git indexに追加されているファイルをローカルリポジトリに反映
 $ git commit -m "[comment]"
+
+・git commitを「-a」オプションを付けて実行すると変更が加えられたファイルを自動検出してコミットできる。ただし、この場合新規に作成されたファイルはコミット対象にはならない。 
+$ git commit -a
+
 -mオプション付けないとコミットエディタが起動する
 $ git commit"
 
@@ -54,7 +70,9 @@ $ git pull
 
 <div>
 参考：Git備忘録（自分用）<br/>
-<a target="_blank" href="http://qiita.com/muramount/items/345d137f024cfd919fa3">http://qiita.com/muramount/items/345d137f024cfd919fa3</a>
+<a target="_blank" href="http://qiita.com/muramount/items/345d137f024cfd919fa3">http://qiita.com/muramount/items/345d137f024cfd919fa3</a><br/>
+参考：Gitを使いこなすための20のコマンド 3ページ<br/>
+<a target="_blank" href="https://osdn.jp/magazine/09/03/16/0831212/3">https://osdn.jp/magazine/09/03/16/0831212/3</a>
 </div>
 
 <p>■Commit Author と Commiter を変更する<p>
