@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■環境</p>
+<div>
+・CentOS release 6.8 (Final)<br/>
+</div>
+
+<p>■SSH概要</p>
+<div>
+sshdはssh接続を受け付けるプログラムで、/etc/ssh/sshd_configに設定を記述します。<br/>
+SSH接続を受ける側のサーバの/etc/ssh/sshd_configを編集する事で、セキュリティ要件を制御する事ができます。
+</div>
+
+<p>■各種パス</p>
+<pre>
+・設定ファイル
+/etc/ssh/sshd_config
+・起動用スクリプト
+/etc/rc.d/init.d/sshd
+・実行ファイル
+/usr/bin/sshd
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・サービス自動起動
+# cnkconfig sshd on
+・サービス起動確認
+# chkconfig sshd --list
+・サービス起動
+# /etc/rc.d/init.d/sshd [start | stop | restart | status]
+# service sshd [start | stop | restart | status]
+</pre>
+
+<p>■基本設定</p>
+<pre>
+# cp sshd_config sshd_config.back
+
+・ルートログインを禁止する
+#PermitRootLogin yes
+↓
+PermitRootLogin no
+
+・通常のパスワードを鍵方式へ変更
+※公開鍵暗号方式する場合、下記参照
+#PasswordAuthentication yes
+↓
+PasswordAuthentication no
+
+・空のパスワードを禁止
+#PermitEmptyPasswords no
+↓
+PermitEmptyPasswords no
+
+・設定ファイルを読み込み直し
+# /etc/rc.d/init.d/sshd reload
+</pre>
+
+<p>■アクセス制御ファイルを変更する</p>
+<pre>
+・「192.168.100.」からのアクセスを許可する場合
+# vi /etc/hosts.allow
+sshd : 192.168.100.
+
+・上記以外のアクセスを全て拒否する
+# vi /etc/hosts.deny
+ALL : ALL
+</pre>
+
+<p>■公開鍵暗号方式</p>
+
+<div>
+参考：
+</div>

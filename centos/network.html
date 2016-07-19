@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■ネットワーク設定</p>
+
+<p>■各種パス</p>
+<pre>
+/etc/sysconfig/network-scripts/ifcfg-eth0
+/etc/sysconfig/network
+/etc/hosts
+・DNS設定
+/etc/resolv.conf
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+# /sbin/service network [start | stop | restart | status]
+</pre>
+
+NetworkManager(ネットワークデバイス)サービスが有効化されているので無効化し、networkサービスを使用する
+<pre>
+# ifconfig
+・CLIからネットワーク設定をいじるのに邪魔になるのでサービスとして停止する。
+# service NetworkManager stop
+
+・NetworkManagerはOS起動時に起動する設定になっているのでそれも無効にする。
+# chkconfig --list NetworkManager
+# chkconfig NetworkManager off
+</pre>
+
+<p>■ネットワークの設定1</p>
+<pre>
+# /bin/vi /etc/sysconfig/network
+</pre>
+<pre>
+# ネットワークを使用するかどうか
+NETWORKING=yes
+# このシステムのホスト名（FQDN：完全修飾型ドメイン名）
+HOSTNAME=host1.your.domain.name
+# ネットワークのドメイン名
+DOMAINNAME=your.domain.name
+# ゲートウェイマシンのIP アドレス
+GATEWAY=192.168.0.1
+</pre>
+
+<p>■ネットワークの設定2</p>
+<pre>
+# cat /etc/sysconfig/network-scripts/ifcfg-eth0
+・なければ作成
+# cp ifcfg-lo ifcfg-eth0
+# vi /etc/sysconfig/network-scripts/ifcfg-eth0
+</pre>
+・設定変更
+<pre>
+#ネットワークインターフェース名
+DEVICE=eth0
+# ブロードキャストアドレス
+BROADCAST=192.168.0.255
+# システムのIP アドレス
+IPADDR=192.168.0.197　
+# ネットマスク
+NETMASK=255.255.255.0
+# そのシステムが属するネットワーク
+NETWORK=192.168.0.0
+# システム起動時にIP アドレス等を割り当てられるしくみを利用するか否かの設定（BOOTP/DHCP/NONE or Static）
+BOOTPROTO=none
+# 起動時に有効にするかどうか(yes/no)
+ONBOOT=yes
+# DNSの設定
+DNS1=xxx.xxx.xxx.xxx
+</pre>
+
+<div>
+参考：Linux技術トレーニング　基本管理コース I<br/>
+https://users.miraclelinux.com/technet/document/linux/training/1_5_1.html
+</div>
+
+<p>■DNSの設定</p>
+<pre>
+# cat /etc/resolve.conf
+nameserver *.*.*.*
+nameserver *.*.*.*
+</pre>
