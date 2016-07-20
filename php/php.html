@@ -10,4 +10,43 @@
 <section>
 <a href="../index.html">TOP</a>
 
-<pre># yum --enablerepo=remi install php php-mysql php-mbstring php-pecl-apc memcached php-pecl-memcached</pre>
+<p>■PHP概要</p>
+<div>
+</div>
+
+<p>■各種パス</p>
+<pre>
+・php.ini
+# php -i | grep php.ini
+・実行ファイル
+/usr/bin/php
+</pre>
+
+<p>■PHPアップデート5.4系</p>
+remiリポジトリからインストールする場合
+<pre>
+# yum --enablerepo=remi install php php-mysql php-mbstring php-pecl-apc memcached php-pecl-memcached
+</pre>
+<a href="./repository.html">サードーパーティーリポジトリ</a>
+
+<p>■基本コマンド</p>
+<pre>
+# /etc/rc.d/init.d/httpd [start | stop | restart | status]
+# service httpd [start | stop | restart | status]
+</pre>
+
+<p>■基本設定</p>
+変更が完了したら設定を反映させる
+<pre>
+・タイムゾーン
+date.timezone = "Asia/Tokyo"
+</pre>
+
+<p>■オプション設定</p>
+変更が完了したら設定を反映させる
+<pre>
+・ショートタグ有効化
+short_open_tag = On
+※.htaccessに記述「php_flag short_open_tag On」でも可能
+</pre>
+
