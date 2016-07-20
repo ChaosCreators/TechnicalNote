@@ -30,6 +30,44 @@ CentOS-6.7-x86_64-LiveCD.img<br/>
 <pre>
 ・アップデートが必要なパッケージを確認する
 # yum check-update
-
-# yum update
+# yum -y update
 </pre>
+
+<div>
+TIPS:mirrorlist.centos.orgに接続できない場合、他のサイトへ接続。以下ftp.riken.jpへ接続する場合
+</div>
+<pre>
+# vi /etc/yum.repos.d/CentOS-Base.repo
+
+[base]
+#mirrorlist=http://mirrorlist.centos.org/?release=$releasever&arch=$basearch&repo=os&infra=$infra
+baseurl=http://ftp.riken.jp/Linux/centos/$releasever/os/$basearch/
+
+以下同様に変更する
+
+[updates]
+.
+.
+.
+</pre>
+
+<div>
+TIPS:必要な場合は以下も設定する
+</div>
+<pre>
+# yum -y groupinstall "Base" "Development tools" "Japanese Support"
+・yum-cronをインストールします。
+# yum -y install yum-cron
+・インストール済みのパッケージを毎日自動更新
+# /etc/rc.d/init.d/yum-cron start
+# chkconfig yum-cron on
+# chkconfig --list yum-cron
+・ランレベル345でon
+yum-cron	0:off   1:off   2:on    3:on    4:on    5:on    6:off
+</pre>
+<div>
+参考：CentOS6 インストール後の設定
+http://centos.server-manual.com/centos6_setup.html
+</div>
+
+
