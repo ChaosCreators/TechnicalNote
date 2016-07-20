@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■MySQL概要</p>
+<div>
+リレーショナル型データベースのデータベースサーバー。
+サーバー上のデータベースをクライアントから操作できるようにするためのサーバー。
+</div>
+
+<p>■各種パス</p>
+<pre>
+・設定ファイル
+/etc/my.cnf
+・ログファイル
+/var/log/mysql.log
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・インストール
+# yum -y install mysql-server
+・起動
+# /etc/rc.d/init.d/mysqld [start | stop | restart | status]
+# service mysqld [start | stop | restart | status]
+・自動起動
+# cnkconfig mysqld on
+・起動確認
+# chkconfig mysqld --list
+</pre>
+<div>
+TIPS：Multilib version problems found.　バージョン競合で失敗した場合
+</div>
+<pre>
+・yumのキャッシュを削除
+# yum clean all
+・skip-brokenを利用すれば、問題があるパッケージを除いて全てをアップデートする事が可能になります。
+# yum –skip-broken upgrade
+# yum -–skip-broken update ← 6.*系
+# package-cleanup –cleandupes
+・remiリポジトリからインストールする場合
+# yum --enablerepo=remi install mysql-server ← 6.*系
+・不明コマンド
+#yum –enablerepo=remi,epel install mysql-server ← 7系？
+</pre>
+<div>
+参考： skip-brokenとは・・・<br/>
+http://kajuhome.com/yum_skip_broken.shtml
+</div>
+
+<p>■基本設定</p>
+<pre>
+# cp /etc/my.cnf /etc/my.cnf.back
+# vi /etc/my.cnf
+
+[mysqld]
+datadir=/var/lib/mysql
+socket=/var/lib/mysql/mysql.sock
+user=mysql
+# Disabling symbolic-links is recommended to prevent assorted security risks
+symbolic-links=0
+character-set-server = utf8　←　追加(MySQLサーバーの文字コードをUTF-8にする)
+</pre>
+
+<p>■MySQL起動</p>
+<pre>
+# /etc/rc.d/init.d/mysqld start
+                                                           [  OK  ]
+mysqld を起動中:                                           [  OK  ]
+# chkconfig mysqld on　←　MySQL自動起動設定
+</pre>
+<div>
+TIPS：[ERROR] Fatal error: Can't open and lock privilege tables: Table 'mysql.host' doesn't exist
+</div>
+<pre>
+・データベースディレクトリがどこだかわからない状態になっているみたいです。
+# mysql_install_db --datadir=/var/lib/mysql --user=mysql
+</pre>
+
+<p>■MySQL初期設定</p>
+<pre>
+[root@centos ~]# mysql_secure_installation　←　MySQL初期設定
+
+NOTE: RUNNING ALL PARTS OF THIS SCRIPT IS RECOMMENDED FOR ALL MySQL
+      SERVERS IN PRODUCTION USE!  PLEASE READ EACH STEP CAREFULLY!
+
+
+In order to log into MySQL to secure it, we'll need the current
+password for the root user.  If you've just installed MySQL, and
+you haven't set the root password yet, the password will be blank,
+so you should just press enter here.
+
+Enter current password for root (enter for none): 　←　空ENTER
+OK, successfully used password, moving on...
+
+Setting the root password ensures that nobody can log into the MySQL
+root user without the proper authorisation.
+
+Set root password? [Y/n] 　←　空ENTER(rootパスワード設定)
+New password: 　←　rootパスワード応答
+Re-enter new password: 　←　rootパスワード応答(確認)
+Password updated successfully!
+Reloading privilege tables..
+ ... Success!
+
+
+By default, a MySQL installation has an anonymous user, allowing anyone
+to log into MySQL without having to have a user account created for
+them.  This is intended only for testing, and to make the installation
+go a bit smoother.  You should remove them before moving into a
+production environment.
+
+Remove anonymous users? [Y/n] 　←　空ENTER(匿名ユーザー削除)
+ ... Success!
+
+Normally, root should only be allowed to connect from 'localhost'.  This
+ensures that someone cannot guess at the root password from the network.
+
+Disallow root login remotely? [Y/n] 　←　空ENTER(リモートからのrootログイン禁止)
+ ... Success!
+
+By default, MySQL comes with a database named 'test' that anyone can
+access.  This is also intended only for testing, and should be removed
+before moving into a production environment.
+
+Remove test database and access to it? [Y/n] 　←　空ENTER(testデータベース削除)
+ - Dropping test database...
+ ... Success!
+ - Removing privileges on test database...
+ ... Success!
+
+Reloading the privilege tables will ensure that all changes made so far
+will take effect immediately.
+
+Reload privilege tables now? [Y/n] 　←　空ENTER
+ ... Success!
+
+Cleaning up...
+
+
+
+All done!  If you've completed all of the above steps, your MySQL
+installation should now be secure.
+
+Thanks for using MySQL!
+</pre>
+
+<p>■MySQL確認</p>
+<pre>
+[root@centos ~]# mysql -u root -p　←　MySQLへrootでログイン
+Enter password: 　←　MySQLのrootパスワード応答
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 19 to server version: 4.1.12
+
+Type 'help;' or '\h' for help. Type '\c' to clear the buffer.
+
+
+mysql> grant all privileges on test.* to centos@localhost identified by 'centospass';
+　←　testデータベースへの全てのアクセス権限を持った、新規ユーザcentosを登録
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> select user from mysql.user where user='centos';　←　centosユーザ登録確認
++--------+
+| user   |
++--------+
+| centos |
++--------+
+1 row in set (0.00 sec)
+
+mysql> exit　←　ログアウト
+</pre>
+<div>
+参考：データベースサーバー構築(MySQL)<br/>
+https://centossrv.com/mysql.shtml
+</div>
