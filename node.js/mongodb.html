@@ -64,6 +64,12 @@ useコマンドで自動生成
 > db.[table].drop()
 </pre>
 
+<p>■フィールド操作</p>
+<pre>
+・フィールド削除
+> db.[COLLECTION NAME].update({},{$unset: {[FILED NAME]:1}},false,true)
+</pre>
+
 <p>■ドキュメント操作</p>
 <pre>
 ・SELECT [MySQL : SELECT * FROM]
