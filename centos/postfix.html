@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■Postfix概要</p>
+<div>
+</div>
+
+<p>■Dovecot概要</p>
+<div>
+Dovecot(ダヴコット)とは、UNIX系のOS上で動作する、POP3とIMAPのサーバーである。 <br/>
+セキュアなシステムを意識した設計方針をとり、Timo Sirainenらによって開発・公開されている。 Courier-MTAやUW IMAPに変わり、標準的な地位を占めるようになっている。
+</div>
+
+<p>■各種パス</p>
+<pre>
+・confファイル
+/etc/postfix/main.cf
+/etc/dovecot/dovecot.conf
+・ログファイル
+/var/log/maillog
+・起動用スクリプト
+/etc/rc.d/init.d/postfix
+/etc/rc.d/init.d/dovecot
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・インストール
+# sudo yum -y install dovecot
+・起動
+# /etc/rc.d/init.d/postfix [start | stop | restart | status]
+# service postfix [start | stop | restart | status]
+・自動起動
+# cnkconfig postfix on
+・起動確認
+# chkconfig postfix --list
+</pre>
+
+<p>■Postfix設定</p>
+<pre>
+・sendmailがインストールされている場合は停止
+# /etc/rc.d/init.d/sendmail stop
+</pre>
+
+<p>■ローカル向けのサーバー設定</p>
+<pre>
+# vi /etc/postfix/main.cf
+mydomain = centos.local
+
+・#コメントアウトを外す
+#myorigin = $mydomain
+↓
+myorigin = $mydomain
+
+・localhost以外からのメール中継を出来るようにする
+inet_interfaces = all
+
+・ローカルユーザーへ配信する必要のあるメールかどうかを判定する
+mydestination = $myhostname, localhost.$mydomain, localhost, $mydomain
+
+・ローカルのみ
+mynetworks = localhost
+mynetworks = 192.168.100.0/24, 127.0.0.0/8 ← メールクライアントの所属するネットワークの場合の設定
+
+・メールボックスはMaildir形式を使う
+home_mailbox Maildir/
+
+・追加(メールサーバーソフト名の隠蔽化)
+smtpd_banner = $myhostname ESMTP unknown
+
+・Postfix再起動
+# service postfix restart
+postfix を停止中:                                          [  OK  ]
+postfix を起動中:                                          [  OK  ]
+</pre>
+
+<p>■SMTP-Auth設定</p>
+<div>
+参考:
+https://centossrv.com/postfix.shtml
+</div>
+
+<p>■ユーザー作成</p>
+<pre>
+・新規ユーザー作成時にMaildirを作成するようにする
+# mkdir -p /etc/skel/Maildir/{new,cur,tmp}　
+# chmod -R 700 /etc/skel/Maildir/　←　メールボックスパーミッション設定
+
+・ユーザー作成
+# useradd monitor
+# passwd monitor [nJYKSmqQ]
+
+# useradd -s /sbin/nologin monitor　←　リモート接続不可にする場合
+
+・メール送信テスト
+# mail monitor@centos.local
+subject : send test
+send
+.　←　本文の終了
+EOT
+
+・メールBOXを確認
+# ls /home/monitor/Maildir/new
+</pre>
+
+<p>■Dovecot設定</p>
+<pre>
+・メールファイルの場所を変更
+# vi /etc/dovecot/conf.d/10-mail.conf
+#mail_location =
+mail_location = maildir:~/Maildir　←　追加(メールボックス形式をMaildir形式とする)
+
+・プロトコルを設定する
+# vi /etc/dovecot/dovecot.conf
+protocols = imap imaps pop3 pop3s　←　追加
+
+・Dovecot再起動
+# service dovecot restart
+postfix を停止中:                                          [  OK  ]
+postfix を起動中:                                          [  OK  ]
+</pre>
+
+<p>■トラブルシューティング</p>
+cmdから
+<pre>
+>telnet 192.168.100.*** 25
+接続中: 192.168.100.***...ホストへ接続できませんでした。 ポート番号 25: 接続に失敗しました
+
+・hosts.allowの設定確認
+# vi /etc/hosts.allow
+全許可
+ALL : 192.168.100. 
+サービスごとの許可
+smtp : 192.168.100.
+sshd : 192.168.100.
+
+・ネットワーク接続一覧の確認
+# netstat -lnp
+tcp 0 0 0.0.0.022
+tcp 0 0 127.0.0.1:25　←　127.0.0.1となっている場合はローカルからのみ接続許可の状態になっているのでmain.cfのmynetworkを見直す
+↓
+tcp 0 0 0.0.0.0:25 ←　外部からの接続を待ち受けている状態
+</pre>
+
+<p>■iptablesの変更</p>
+<a href="./iptables.html">iptables</a>

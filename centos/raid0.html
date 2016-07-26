@@ -15,3 +15,118 @@
 参考：CentOS のソフトウェア RAID を使ってみる<br/>
 <a target="_blank" href="http://dotnsf.blog.jp/archives/393213.html">http://dotnsf.blog.jp/archives/393213.html</a>
 </div>
+
+<p>■RAID状態の確認</p>
+<pre>
+# cat /proc/mdstat
+Personalities : [raid1]
+md1 : active raid1 sda1[0] sdb1[1]
+      307136 blocks super 1.0 [2/2] [UU] ←　故障時は[U_]等になる
+
+md3 : active raid1 sdb3[1] sda3[0]
+      310034432 blocks super 1.1 [2/2] [UU]
+      bitmap: 0/3 pages [0KB], 65536KB chunk
+
+md2 : active raid1 sdb2[1] sda2[0]
+      2095104 blocks super 1.1 [2/2] [UU]
+</pre>
+
+<p>■通知を受け取れるようにする</p>
+<a href="./postfix">メール設定</a>
+<pre>
+・設定ファイル
+/etc/mdadm.conf
+# vi /etc/mdadm.conf
+MAILADDR root
+↓
+MAILADDR monitor@localhost.localdomain
+
+・再起動
+# /etc/rc.d/init.d/mdmonitor restart
+
+・テスト送信
+mdadm --monitor --test --oneshot --scan
+</pre>
+
+<p>■故障から復旧まで</p>
+http://centossrv.com/centos5-raid-3.shtml
+<pre>
+■故障から復旧まで
+・故障ディスクaのRAIDデバイス0-2を故障状態にする
+# mdadm --manage /dev/md0 --fail /dev/sda1
+# mdadm --manage /dev/md1 --fail /dev/sda2
+# mdadm --manage /dev/md2 --fail /dev/sda2
+
+・RAIDデバイスの状態確認
+# cat /proc/mdstat
+
+・RAIDデバイスを構成する/dev/sda1-3を削除する
+# mdadm --manage /dev/md0 --remove /dev/sda1
+# mdadm --manage /dev/md1 --remove /dev/sda2
+# mdadm --manage /dev/md2 --remove /dev/sda3
+
+・RAIDデバイスを構成する/dev/sda1-3が無くなったか確認する
+# cat /proc/mdstat
+
+・システム停止
+# halt
+</pre>
+
+<p>■partedコマンドで新しくraidっボリュームを作成する</p>
+http://akira-arets.blogspot.jp/2012/02/centos62-parted-create-partition.html
+<pre>
+# parted
+・ディスクの切り替えを行う
+(parted) select /dev/sdb
+・現在のディスクの状態を表示
+(parted) print
+
+・パーティションを作成する
+(parted) select /dev/sda
+(parted) unit b
+(parted) mkpart
+primary
+ext4
+start ***B
+end ***B
+コピー元と同じサイズでパーティションを作成する
+</pre>
+
+<p>■fdiskにて領域のシステム ID を変更しブート可能フラグをつける</p>
+<pre>
+# fdisk /dev/sda
+:t　←　t(システムID設定)応答
+:1　←　1(パーティション番号)応答
+:fd　←　fd(RAIDシステムID)応答
+
+:t
+:2
+:fd
+
+:t
+:3
+:fd
+
+・ブート可能フラグ設定
+:a
+:1
+
+・パーティション表示
+:p
+
+・問題なければ書き込み
+:w
+</pre>
+<p>■/dev/sdaをRAIDデバイスへ組み込む</p>
+<pre>
+# mdadm --manage /dev/md0 --add /dev/sdb1
+# mdadm --manage /dev/md1 --add /dev/sdb2
+# mdadm --manage /dev/md2 --add /dev/sdb3
+
+・RAIDデバイス同期状態確認
+#watch cat /proc/mdstat
+
+同期が完了するまで待った後にGRUBをインストール
+</pre>
+■GRUB(ブートローダー)インストール
+
