@@ -50,20 +50,43 @@ mdadm --monitor --test --oneshot --scan
 
 <p>■故障から復旧まで</p>
 http://centossrv.com/centos5-raid-3.shtml
+<div>
+TIPS：デバイスの構成を調べる場合 ls /dev<br/>
+インストール時にRAIDデバイスを1から3で割り当てた場合md1からmd3と読み替える<br/>
+TIPS:インストール時にブートローダをRAIDデバイス-dev/md1に入れていれば片方を故障状態にしても起動可能
+</div>
 <pre>
 ■故障から復旧まで
 ・故障ディスクaのRAIDデバイス0-2を故障状態にする
 # mdadm --manage /dev/md0 --fail /dev/sda1
+mdadm: set /dev/sda1 faulty in /dev/md0
 # mdadm --manage /dev/md1 --fail /dev/sda2
+mdadm: set /dev/sda1 faulty in /dev/md1
 # mdadm --manage /dev/md2 --fail /dev/sda2
+mdadm: set /dev/sda1 faulty in /dev/md2
 
 ・RAIDデバイスの状態確認
 # cat /proc/mdstat
+Personalities : [raid1]
+md1 : active raid1 sda1[0](F) sdb1[1]
+      307136 blocks super 1.0 [2/1] [_U]
+
+md3 : active raid1 sdb3[1] sda3[0](F)
+      310034432 blocks super 1.1 [2/1] [_U]
+      bitmap: 1/3 pages [4KB], 65536KB chunk
+
+md2 : active raid1 sdb2[1] sda2[0](F)
+      2095104 blocks super 1.1 [2/1] [_U]
+
+unused devices: <　none　>
 
 ・RAIDデバイスを構成する/dev/sda1-3を削除する
 # mdadm --manage /dev/md0 --remove /dev/sda1
+mdadm: hot removed /dev/sda1
 # mdadm --manage /dev/md1 --remove /dev/sda2
+mdadm: hot removed /dev/sda2
 # mdadm --manage /dev/md2 --remove /dev/sda3
+mdadm: hot removed /dev/sda3
 
 ・RAIDデバイスを構成する/dev/sda1-3が無くなったか確認する
 # cat /proc/mdstat
@@ -72,24 +95,38 @@ http://centossrv.com/centos5-raid-3.shtml
 # halt
 </pre>
 
+
 <p>■partedコマンドで新しくraidっボリュームを作成する</p>
 http://akira-arets.blogspot.jp/2012/02/centos62-parted-create-partition.html
+<div>
+TIPS:パーティションがシリンダ境界線で終わってない場合fdiskは使えないのでpartedでパーティションを作成する<br/>
+TIPS：接続されているhd1本目がsda、hd2本目がsabとなってる
+</div>
 <pre>
+・1本目sdaが故障した場合
 # parted
-・ディスクの切り替えを行う
+・ディスクの切り替えを行いsdbのパーティション状態を確認する
 (parted) select /dev/sdb
 ・現在のディスクの状態を表示
+(parted) unit b　←　表記をバイト単位に切り替えられる　MBだとメガバイト
 (parted) print
+番号  開始         終了           サイズ         タイプ   ファイルシステム  フラグ
+ 1    1048576B     315621375B     314572800B     primary  ext4              boot, raid
+ 2    315621376B   2463105023B    2147483648B    primary                    raid
+ 3    2463105024B  320072581119B  317609476096B  primary                    raid
 
 ・パーティションを作成する
 (parted) select /dev/sda
 (parted) unit b
-(parted) mkpart
-primary
-ext4
-start ***B
-end ***B
-コピー元と同じサイズでパーティションを作成する
+(parted) mkpart　←　パーティション作成
+primary　←　パーティションの種類
+ext4　←　ファイルシステムの種類
+開始? ***　←　プリントで表示した容量と同じにする
+終了? ***
+
+・1~3をコピー元と同じサイズでパーティションを作成する
+
+(parted) quit
 </pre>
 
 <p>■fdiskにて領域のシステム ID を変更しブート可能フラグをつける</p>
@@ -120,8 +157,15 @@ end ***B
 <p>■/dev/sdaをRAIDデバイスへ組み込む</p>
 <pre>
 # mdadm --manage /dev/md0 --add /dev/sdb1
+mdadm: added /dev/sdb1
+
 # mdadm --manage /dev/md1 --add /dev/sdb2
+mdadm: added /dev/sdb2
+
 # mdadm --manage /dev/md2 --add /dev/sdb3
+mdadm: added /dev/sdb3
+addした段階で同期が自動で開始サれる
+
 
 ・RAIDデバイス同期状態確認
 #watch cat /proc/mdstat
@@ -130,3 +174,40 @@ end ***B
 </pre>
 ■GRUB(ブートローダー)インストール
 
+<pre>
+[root@centos ~]# grub　←　GRUBシェルモード起動
+
+    GNU GRUB  version 0.97  (640K lower / 3072K upper memory)
+
+ [ Minimal BASH-like line editing is supported.  For the first word, TAB
+   lists possible command completions.  Anywhere else TAB lists the possible
+   completions of a device/filename.]
+
+grub> root (hd1,0)　←　新ハードディスクをrootにする
+ Filesystem type is ext2fs, partition type 0xfd
+
+grub> setup (hd1)　←　新ハードディスクへGRUBインストール
+ Checking if "/boot/grub/stage1" exists... no
+ Checking if "/grub/stage1" exists... yes
+ Checking if "/grub/stage2" exists... yes
+ Checking if "/grub/e2fs_stage1_5" exists... yes
+ Running "embed /grub/e2fs_stage1_5 (hd1)"...  15 sectors are embedded.
+succeeded
+ Running "install /grub/stage1 (hd1) (hd1)1+15 p (hd1,0)/grub/stage2 /grub/grub.conf"... succeeded
+Done.
+
+grub> root (hd0,0)　←　旧ハードディスクをrootにする
+ Filesystem type is ext2fs, partition type 0xfd
+
+grub> setup (hd0)　←　旧ハードディスクへGRUBインストール
+ Checking if "/boot/grub/stage1" exists... no
+ Checking if "/grub/stage1" exists... yes
+ Checking if "/grub/stage2" exists... yes
+ Checking if "/grub/e2fs_stage1_5" exists... yes
+ Running "embed /grub/e2fs_stage1_5 (hd0)"...  15 sectors are embedded.
+succeeded
+ Running "install /grub/stage1 (hd0) (hd0)1+15 p (hd0,0)/grub/stage2 /grub/grub.conf"... succeeded
+Done.
+
+grub> quit　←　GRUBシェルモード終了
+</p>
