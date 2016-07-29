@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■環境</p>
+<div>
+・CentOS release 6.8 (Final)<br/>
+</div>
+
+<p>■logwatch概要</p>
+<div>
+logwatch は、サーバーのログ（デフォルトでは、/var/log 以下のログファイル）を、見やすいレポートにまとめて<br/>毎日メールで通知してくれるサーバーログ監視ツールです。不正アクセスやエラーに関する情報だけを見つけ出してくれるので、ログのチェックがとても簡略化されます。
+</div>
+
+<p>■各種パス</p>
+<pre>
+・confファイル
+/etc/logwatch/conf/logwatch.conf
+/usr/share/logwatch/default.conf/logwatch.conf
+・cron設定
+/etc/cron.daily/0logwatch
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・perlが必要となる
+# perl --version
+・インストール
+# sudo yum -y install logwatch
+</pre>
+
+<p>■設定ファイル</p>
+<pre>
+# cp /usr/share/logwatch/default.conf/logwatch.conf /etc/logwatch/conf/logwatch.conf
+# vi /etc/logwatch/conf/logwatch.conf
+# Local configuration options go here (defaults are in /usr/share/logwatch/default.conf/logwatch.conf)
+#Archives = No
+↓
+Archives = Yes
+ 
+Detail = Low
+↓
+Detail = High
+
+MailTo = root
+↓
+MailTo = monitor　←　宛先を監視用ユーザーへ変更する
+
+・出力してみる
+# logwatch --print
+</pre>
+–print オプションで、logwatch のレポートをコンソールに出力しますので、Detail = High, Detail = Low での設定を見比べてみると良いと思います。<br/>
+当然、High のほうがより詳しいログ・レポートとなります。
+
+<p>■クーロン設定</p>
+<pre>
+# vi /etc/cron.daily/0logwatch
+</pre>

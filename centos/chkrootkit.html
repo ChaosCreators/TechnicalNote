@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang=”ja”>
+<head>
+<title></title>
+<meta charset="utf-8">
+<link rel="stylesheet" type="text/css" href="../style.css" media="screen">
+</head>
+<body>
+
+<section>
+<a href="../index.html">TOP</a>
+
+<p>■環境</p>
+<div>
+・CentOS release 6.8 (Final)<br/>
+</div>
+
+<p>■chkrootkit概要</p>
+<div>
+sshdはssh接続を受け付けるプログラムで、/etc/ssh/sshd_configに設定を記述します。<br/>
+SSH接続を受ける側のサーバの/etc/ssh/sshd_configを編集する事で、セキュリティ要件を制御する事ができます。
+</div>
+
+<p>■各種パス</p>
+<pre>
+</pre>
+
+<p>■基本コマンド</p>
+<pre>
+・インストール Centos7
+# wget ftp://ftp.pangeia.com.br/pub/seg/pac/chkrootkit.tar.gz　-P /temp　←　chkrootkitダウンロード
+# tar zxvf chkrootkit.tar.gz　←　chkrootkit展開
+# mkdir -p ~/bin && mv chkrootkit-0.50/chkrootkit ~/bin　←　chkrootkitを移動
+# rm -rf chkrootkit-0.50/　←　chkrootkit展開先ディレクトリを削除
+# rm -f chkrootkit.tar.gz　←　ダウンロードしたchkrootkitを削除
+
+・インストール Centos6
+# yum --enablerepo=epel -y install chkrootkit　←　chkrootkitインストール
+</pre>
+
+<div>
+TIPS：EPELリポジトリ導入　<a href="./repository.html">サードパーティリポジトリ</a><br/>
+TIPS:webet -p 保存先ディレクトリを指定　/tmp　←　一時フォルダー
+</div>
+
+<p>■chkrootkit確認</p>
+<pre>
+# chkrootkit | grep INFECTED　←　chkrootkit実行
+上記chkrootkit実行結果として"INFECTED"という行が表示されなければ問題なし
+</pre>
+
+<p>■chkrootkit定期自動実行設定</p>
+<pre>
+# vi /etc/cron.daily/chkrootkit　←　chkrootkit実行スクリプトを毎日自動実行されるディレクトリへ作成
+#!/bin/bash
+
+PATH=/usr/bin:/bin:/root/bin
+
+TMPLOG=`mktemp`
+
+# chkrootkit実行
+chkrootkit > $TMPLOG
+
+# ログ出力
+cat $TMPLOG | logger -t chkrootkit
+
+# SMTPSのbindshell誤検知対応
+if [ ! -z "$(grep 465 $TMPLOG)" ] && \
+   [ -z $(/usr/sbin/lsof -i:465|grep bindshell) ]; then
+        sed -i '/465/d' $TMPLOG
+fi
+
+# upstartパッケージ更新時のSuckit誤検知対応
+if [ ! -z "$(grep Suckit $TMPLOG)" ] && \
+   [ -z $(rpm -V `rpm -qf /sbin/init`) ]; then
+        sed -i '/Suckit/d' $TMPLOG
+fi
+
+# rootkit検知時のみroot宛メール送信
+[ ! -z "$(grep INFECTED $TMPLOG)" ] && \
+grep INFECTED $TMPLOG | mail -s "chkrootkit report in `hostname`" root
+
+rm -f $TMPLOG
+
+# chmod 700 /etc/cron.daily/chkrootkit　←　chkrootkit実行スクリプトへ実行権限付加
+
+# bash ./chkrootkit　←　テスト
+</pre>
+これで毎日定期的にrootkitがインストールされていないかチェックされ、インストールされていた場合はroot宛にメールが届くようになる。<br/>
+また、chkrootkitの実行結果は/var/log/messagesに保存される。 
+
+
+<p>■chkrootkitで使用する安全なコマンドの確保</p>
+chkrootkitが使用するコマンド群が既に改竄されていた場合、rootkitを正常に検出できなくなるので、<br/>
+chkrootkitが使用するコマンド群をコピーしておき、必要な場合にはそのコマンド群を使用してchkrootkitを実行する。
+<pre>
+# mkdir chkrootkitcmd　←　chkrootkit使用コマンド退避先ディレクトリ作成
+# cp `which --skip-alias awk cut echo egrep find head id ls netstat ps strings sed ssh uname` chkrootkitcmd/
+　←　chkrootkit使用コマンドを退避先ディレクトリへコピー
+# chkrootkit -p /root/chkrootkitcmd|grep INFECTED
+　←　退避したchkrootkit使用コマンドを使用してchkrootkit実行
+# zip -r chkrootkitcmd.zip chkrootkitcmd/　←　chkrootkit使用コマンド退避先ディレクトリ圧縮
+# rm -rf chkrootkitcmd　←　chkrootkit使用コマンド退避先ディレクトリ削除
+# yum -y install sharutils
+　←　mailコマンドでzipファイル添付メールを送信するのに必要なuuencodeコマンドインストール
+# uuencode chkrootkitcmd.zip chkrootkitcmd.zip|mail root
+　←　chkrootkit使用コマンド(圧縮版)をroot宛にメール送信
+# rm -f chkrootkitcmd.zip　←　chkrootkit使用コマンド(圧縮版)削除
+</pre>
+<div>
+参考：rootkit検知ツール導入(chkrootkit)<br/>
+https://centossrv.com/chkrootkit.shtml<br/>
+参考：CentOSでサーバー公開するためのセキュリティ設定メモ<br/>
+http://qiita.com/narumi_/items/179048afb48f64f45c6e
+
+</div>
